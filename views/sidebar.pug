@@ -1,0 +1,9 @@
+ul.contact-list 
+    each contact in contacts
+        li 
+            a(
+                style="cursor: pointer"
+                data-on:click=`@get('/contacts/${contact.id}')`
+            ) #{contact.name}
+div.actions 
+    button.link(data-on:click=`@get('/contacts/new')`) New Contact

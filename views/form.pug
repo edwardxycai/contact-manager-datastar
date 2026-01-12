@@ -1,0 +1,32 @@
+//- 1. Define local template helper
+- isEditing = (contact && contact.id)
+
+//- 2. Initialize Datastar Signals (REQUIRED)
+//- Every signal must be initialized. If contact is new, we use empty strings.
+//- Use colon syntax: data-signals:name
+div(data-signals:name=`'${contact.name || ""}'` data-signals:email=`'${contact.email || ""}'`)
+    h2= isEditing ? "Edit Contact" : "New Contact" 
+
+    div.form-container
+        label(for='name') Name:
+        //- 3. Two-way binding: data-bind:name links input to the 'name' signal
+        input#name(
+            type='text' 
+            data-bind:name="" 
+            required
+        )
+
+        label(for='email') Email: 
+        input#email(
+            type='email' 
+            data-bind:email=""
+            required
+        )
+
+        div.actions
+          //- 4. Action triggers: @post and @put send the signals as JSON
+          //- type='button' is critical to prevent standard browser form submission
+          button(
+              type='button'
+              data-on:click=isEditing ? `@put('/update/${contact.id}')` : `@post('/contacts')`
+          ) Submit

@@ -1,0 +1,9 @@
+h2 #{contact.name}
+
+p #[strong Name:] #{contact.name}
+p #[strong Email:] #{contact.email}
+
+div.actions
+    button.link(data-on:click=`@get('/contacts/${contact.id}/edit')`) Edit Contact
+    <p></p>
+    button.link(data-on:click=`@delete('/delete/${contact.id}')`) Delete Contact
