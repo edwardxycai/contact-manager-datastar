@@ -20,6 +20,5 @@ app.use(express.json()); // Essential for Datastar v1/v2
 app.use(express.urlencoded({ extended: true }));    
 app.use('/', routes);
 
-const server = app.listen(3000, () => {
-    console.log(`Express is running on port ${server.address().port}`);
-});
+export default app;
+

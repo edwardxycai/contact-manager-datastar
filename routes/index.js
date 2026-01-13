@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { check } from 'express-validator';
+import { check, validationResult } from 'express-validator';
 
 const router = Router();
 
 // In-memory contact list
-const contacts = [
+export const initialContacts = () => ([
     { id: 1, name: 'John Doe', email: 'john.doe@example.com' },
     { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com' },
     { id: 3, name: 'Emily Johnson', email: 'emily.johnson@example.com' },
@@ -15,7 +15,13 @@ const contacts = [
     { id: 8, name: 'Olivia Kim', email: 'olivia.kim@example.com' },
     { id: 9, name: 'Kwame Nkrumah', email: 'kwame.nkrumah@example.com' },
     { id: 10, name: 'Chen Yu', email: 'chen.yu@example.com' },
-];
+]);
+
+let contacts = initialContacts();
+
+export const resetContacts = () => {
+  contacts = initialContacts();
+};
 
 const sendFragments = (res, fragments) => {
     res.setHeader('Content-Type', 'text/event-stream');
@@ -152,6 +158,11 @@ router.put('/update/:id',
         check('email').isEmail().withMessage('Valid email is required')
     ],
     (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
+
         const id = Number(req.params.id);
         const { name, email } = req.body; // Datastar sends data in req.body
         const index = contacts.findIndex(c => c.id === id);
