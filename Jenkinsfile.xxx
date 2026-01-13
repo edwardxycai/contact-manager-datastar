@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs 'node-22.12.0'
+    }
+
+    environment {
+        PROJECT_DIR = '/home/vovo/workspace/node-workspace/contact-manager-datastar'
+        NODE_IMAGE = 'node:22-bullseye'
+        APP_DIR = 'contact-manager-datastar'        
+    }
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dir(env.APP_DIR) {
+                        sh """
+                        docker build -t contact-manager-datastar:latest .
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Deploy (optional)') {
+            steps {
+                echo 'Deploy stage: Add your deployment scripts here'
+                // e.g., docker run -d -p 3000:3000 contact-manager-datastar:latest
+            }
+        }
+
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished'
+        }
+        success {
+            echo '✅ Tests passed'
+        }
+        failure {
+            echo '❌ Tests failed'
+        }
+    }
+}
