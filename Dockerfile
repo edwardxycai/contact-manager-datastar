@@ -16,7 +16,7 @@ COPY server.js .
 COPY jest.config.js .
 
 RUN npm test
-
+ 
 
 # =========================
 # 2️⃣ Runtime stage
