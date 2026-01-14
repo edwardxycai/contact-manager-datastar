@@ -11,6 +11,7 @@ RUN npm install
 COPY public ./public
 COPY routes ./routes
 COPY views ./views
+COPY tests ./tests
 COPY app.js .
 COPY server.js .
 COPY jest.config.js .
