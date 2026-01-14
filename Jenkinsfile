@@ -37,7 +37,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 dir(env.APP_DIR) {
-                    sh 'docker build -t contact-manager-datastar:latest .'
+                    sh 'docker build -t contact-manager-datastar:latest dir(env.APP_DIR)'
                 }
             }
         }
