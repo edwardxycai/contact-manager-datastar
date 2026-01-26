@@ -7,6 +7,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 RUN npm install
+RUN npx playwright install
 
 COPY public ./public
 COPY routes ./routes
@@ -17,6 +18,7 @@ COPY server.js .
 COPY jest.config.js .
 
 RUN npm test
+RUN npx playwright test
  
 
 # =========================

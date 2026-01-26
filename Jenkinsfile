@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         APP_DIR = 'contact-manager-datastar'
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = '0'
     }
 
     stages {
@@ -15,6 +16,7 @@ pipeline {
             steps {
                 sh 'node -v'
                 sh 'npm -v'
+                sh 'npx -v'
             }
         }
 
@@ -22,14 +24,29 @@ pipeline {
             steps {
                 dir(env.APP_DIR) {
                     sh 'npm ci'
+                    sh 'npx playwright install'
                 }
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Tests / API Tests with Jest') {
             steps {
                 dir(env.APP_DIR) {
                     sh 'npm test'
+                }
+            }
+        }
+
+        stage('Run UI Tests with Playwright') {
+            steps {
+                dir(env.APP_DIR) {
+                    sh '''
+                      npm start &
+                      APP_PID=$!
+                      sleep 5
+                      npx playwright test
+                      kill $APP_PID
+                    '''
                 }
             }
         }
