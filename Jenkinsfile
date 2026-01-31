@@ -44,7 +44,7 @@ pipeline {
                       npm start &
                       APP_PID=$!
                       sleep 5
-                      npx playwright test
+                      npx playwright test --config=playwright.config.mjs
                       kill $APP_PID
                     '''
                 }

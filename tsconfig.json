@@ -9,6 +9,6 @@
   },
   "include": [
     "tests/**/*.ts",
-    "playwright.config.js"
+    "playwright.config.mjs"
   ]
 }
