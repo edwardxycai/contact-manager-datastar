@@ -31,23 +31,23 @@ pipeline {
 
         stage('Run Tests / API Tests with Jest') {
             steps {
-                dir(env.APP_DIR) {
-                    sh 'npm test'
-                }
+                // dir(env.APP_DIR) {
+                sh 'npm test'
+                // }
             }
         }
 
         stage('Run UI Tests with Playwright') {
             steps {
-                dir(env.APP_DIR) {
-                    sh '''
-                      npm start &
-                      APP_PID=$!
-                      sleep 5
-                      npx playwright test --config=playwright.config.mjs
-                      kill $APP_PID
-                    '''
-                }
+                // dir(env.APP_DIR) {
+                sh '''
+                    npm start &
+                    APP_PID=$!
+                    sleep 5
+                    npx playwright test --config=playwright.config.mjs
+                    kill $APP_PID
+                '''
+                // }
             }
         }
 
