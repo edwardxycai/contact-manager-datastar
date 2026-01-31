@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        APP_DIR = 'contact-manager-datastar'
+        // APP_DIR = 'contact-manager-datastar'
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = '0'
     }
 
