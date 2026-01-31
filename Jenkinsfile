@@ -22,10 +22,10 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                dir(env.APP_DIR) {
-                    sh 'npm ci'
-                    sh 'npx playwright install'
-                }
+                // dir(env.APP_DIR) {
+                sh 'npm ci'
+                sh 'npx playwright install'
+                // }
             }
         }
 
