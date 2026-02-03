@@ -1,78 +1,59 @@
 pipeline {
-    agent any
+  agent {
+    docker {
+      image 'mcr.microsoft.com/playwright:v1.42.1-jammy'
+      args '-u root:root'
+    }
+  }
 
-    tools {
-        nodejs 'node-22.12.0'
+  environment {
+    PLAYWRIGHT_BROWSERS_PATH = "${WORKSPACE}/.cache/ms-playwright"
+    NPM_CONFIG_CACHE        = "${WORKSPACE}/.cache/npm"
+    CI = 'true'
+  }
+
+  stages {
+
+    stage('Install Dependencies') {
+      steps {
+        sh 'npm ci'
+      }
     }
 
-    environment {
-        // APP_DIR = 'contact-manager-datastar'
-        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = '0'
+    stage('API Tests (Jest)') {
+      steps {
+        sh 'npm test'
+      }
     }
 
-    stages {
+    stage('UI Tests (Playwright)') {
+      steps {
+        sh '''
+          npm start &
+          APP_PID=$!
 
-        stage('Verify Node') {
-            steps {
-                sh 'node -v'
-                sh 'npm -v'
-                sh 'npx -v'
-            }
-        }
+          npx wait-on http://localhost:3000/contacts
 
-        stage('Install Dependencies') {
-            steps {
-                // dir(env.APP_DIR) {
-                sh 'npm ci'
-                sh 'npx playwright install'
-                // }
-            }
-        }
+          npx playwright test
 
-        stage('Run Tests / API Tests with Jest') {
-            steps {
-                // dir(env.APP_DIR) {
-                sh 'npm test'
-                // }
-            }
-        }
-
-        stage('Run UI Tests with Playwright') {
-            steps {
-                // dir(env.APP_DIR) {
-                sh '''
-                    npm start &
-                    APP_PID=$!
-                    sleep 5
-                    npx playwright test --config=playwright.config.mjs
-                    kill $APP_PID
-                '''
-                // }
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t contact-manager-datastar:latest .'
-            }
-        }
-
-        stage('Deploy (optional)') {
-            steps {
-                sh '''
-                  docker stop contact-manager || true
-                  docker rm contact-manager || true
-                  docker run -d \
-                    --name contact-manager \
-                    -p 3000:3000 \
-                    contact-manager-datastar:latest
-                '''
-            }
-        }
+          kill $APP_PID
+        '''
+      }
     }
+  }
 
-    post {
-        success { echo '✅ Pipeline succeeded' }
-        failure { echo '❌ Pipeline failed' }
+  post {
+    always {
+      archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
+      publishHTML([
+        reportName: 'Playwright Report',
+        reportDir: 'playwright-report',
+        reportFiles: 'index.html',
+        keepAll: true,
+        alwaysLinkToLastBuild: true
+      ])
     }
+    success { echo '✅ Pipeline succeeded' }
+    failure { echo '❌ Pipeline failed' }
+  }
 }
