@@ -11,4 +11,10 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
+  webServer: {
+    command: 'node server.js',
+    port: 3000,
+    timeout: 120 * 1000,
+    reuseExistingServer: false,
+  },  
 });
