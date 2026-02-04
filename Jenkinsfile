@@ -1,59 +1,50 @@
 pipeline {
-  agent {
-    docker {
-      image 'mcr.microsoft.com/playwright:v1.42.1-jammy'
-      args '-u root:root'
-    }
-  }
-
-  environment {
-    PLAYWRIGHT_BROWSERS_PATH = "${WORKSPACE}/.cache/ms-playwright"
-    NPM_CONFIG_CACHE        = "${WORKSPACE}/.cache/npm"
-    CI = 'true'
-  }
-
-  stages {
-
-    stage('Install Dependencies') {
-      steps {
-        sh 'npm ci'
-      }
+    agent {
+        docker {
+            image 'mcr.microsoft.com/playwright:v1.42.1-jammy'
+            args '-u root:root'
+        }
     }
 
-    stage('API Tests (Jest)') {
-      steps {
-        sh 'npm test'
-      }
+    environment {
+        PLAYWRIGHT_BROWSERS_PATH = "${WORKSPACE}/.cache/ms-playwright"
+        NPM_CONFIG_CACHE        = "${WORKSPACE}/.cache/npm"
+        CI = 'true'
     }
 
-    stage('UI Tests (Playwright)') {
-      steps {
-        sh '''
-          npm start &
-          APP_PID=$!
+    stages {
 
-          npx wait-on http://localhost:3000/contacts
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm ci'
+            }
+        }
 
-          npx playwright test
+        stage('API Tests (Jest)') {
+            steps {
+                sh 'npm test'
+            }
+        }
 
-          kill $APP_PID
-        '''
-      }
+        stage('UI Tests (Playwright)') {
+            steps {
+                sh 'npx playwright test'
+            }
+        }
     }
-  }
 
-  post {
-    always {
-      archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
-      publishHTML([
-        reportName: 'Playwright Report',
-        reportDir: 'playwright-report',
-        reportFiles: 'index.html',
-        keepAll: true,
-        alwaysLinkToLastBuild: true
-      ])
+    post {
+        always {
+            archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
+            publishHTML([
+                reportName: 'Playwright Report',
+                reportDir: 'playwright-report',
+                reportFiles: 'index.html',
+                keepAll: true,
+                alwaysLinkToLastBuild: true
+            ])
+        }
+        success { echo '✅ Pipeline succeeded' }
+        failure { echo '❌ Pipeline failed' }
     }
-    success { echo '✅ Pipeline succeeded' }
-    failure { echo '❌ Pipeline failed' }
-  }
 }

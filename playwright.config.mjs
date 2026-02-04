@@ -14,7 +14,7 @@ export default defineConfig({
   webServer: {
     command: 'node server.js',
     port: 3000,
-    timeout: 120 * 1000,
-    reuseExistingServer: false,
-  },  
+    timeout: 120_000,
+    reuseExistingServer: true,
+  },
 });
