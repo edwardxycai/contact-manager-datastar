@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Clean Workspace') {
         steps {
-            deleteDir()   // THIS IS NON-NEGOTIABLE
+            deleteDir()   // THIS PREVENTS THE BUG FOREVER
         }
         }
 
