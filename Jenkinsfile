@@ -1,8 +1,9 @@
 pipeline {
     agent {
         docker {
-        image 'mcr.microsoft.com/playwright:v1.58.0-jammy'
-        args '-v /dev/shm:/dev/shm'
+            image 'mcr.microsoft.com/playwright:v1.58.0-jammy'
+            args '--user root -v /dev/shm:/dev/shm'
+            reuseNode true
         }
     }
 
