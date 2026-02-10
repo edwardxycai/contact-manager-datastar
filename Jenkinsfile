@@ -13,6 +13,15 @@ pipeline {
     }
 
     stages {
+        stage('Hard Clean Workspace') {
+            steps {
+                sh '''
+                sudo rm -rf node_modules
+                sudo rm -rf ~/.cache/ms-playwright
+                sudo chown -R jenkins:jenkins .
+                '''
+            }
+        }
 
         stage('Install Dependencies') {
             steps {
