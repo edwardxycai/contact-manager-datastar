@@ -7,6 +7,10 @@ pipeline {
         }
     }
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     environment {
         PLAYWRIGHT_BROWSERS_PATH = "${WORKSPACE}/.cache/ms-playwright"
         NPM_CONFIG_CACHE        = "${WORKSPACE}/.cache/npm"
@@ -14,10 +18,11 @@ pipeline {
     }
 
     stages {
-        stage('Clean Workspace') {
-        steps {
-            deleteDir()   // THIS PREVENTS THE BUG FOREVER
-        }
+        stage('Clean Workspace + Check Out') {
+            steps {
+                deleteDir()   // THIS PREVENTS THE BUG FOREVER
+                checkout scm            
+            }
         }
 
         stage('Install Dependencies') {
