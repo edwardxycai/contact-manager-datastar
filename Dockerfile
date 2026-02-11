@@ -1,7 +1,7 @@
 # =========================
 # 1️⃣ Build & Test stage
 # =========================
-FROM node:22-bullseye AS build
+FROM mcr.microsoft.com/playwright:v1.58.0-jammy AS build
 
 WORKDIR /usr/src/app
 
@@ -10,7 +10,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 # ---- Install Playwright browsers
-RUN npx playwright install --with-deps
+# RUN npx playwright install --with-deps
 
 # ---- Copy app source
 COPY public ./public
