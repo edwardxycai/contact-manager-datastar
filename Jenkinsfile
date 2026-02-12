@@ -18,12 +18,14 @@ pipeline {
     }
 
     stages {
-        // stage('Clean Workspace + Check Out') {
-        //     steps {
-        //         deleteDir()   // THIS PREVENTS THE BUG FOREVER
-        //         checkout scm            
-        //     }
-        // }
+        stage('Clean Workspace + Check Out') {
+           steps {
+                // 使用 sh 而非 deleteDir() 有時更暴力有效，確保權限問題被掃除
+                sh 'sudo chown -r jenkins:jenkins . || true' 
+                deleteDir()
+                checkout scm
+            }
+        }
 
         stage('Install Dependencies') {
             steps {
