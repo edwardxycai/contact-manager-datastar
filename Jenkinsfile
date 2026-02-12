@@ -63,10 +63,10 @@ pipeline {
         // }
 
         stage('Build Production Image') {
-            steps(
+            steps{
                 // 回到主機執行 Docker Build，這時 node_modules 已經被 ignore
                 sh 'docker build -t contact-manager-datastar:latest .'
-            )
+            }
         }
     }
 
