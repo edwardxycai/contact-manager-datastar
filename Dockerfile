@@ -1,7 +1,7 @@
 # =========================
 # 1️⃣ Build & Test stage
 # =========================
-FROM mcr.microsoft.com AS build
+FROM mcr.microsoft.com/playwright:v1.58.0-jammy AS build
 
 WORKDIR /usr/src/app
 
