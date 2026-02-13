@@ -3,13 +3,13 @@ node_modules
 npm-debug.log
 
 # 測試與覆蓋率報告
-tests/
-tests-results/
-test-results/
-playwright-report/
-blob-report/
-coverage/
-.nyc_output
+# tests/
+# tests-results/
+# test-results/
+# playwright-report/
+# blob-report/
+# coverage/
+# .nyc_output
 
 # 環境變數與機敏資訊
 .env
