@@ -21,11 +21,12 @@ pipeline {
     stages {
         stage('Clean & Checkout') {
            steps {
-                // 1. 強制把當前目錄所有權拿回來，然後刪除
-                // 如果沒有 sudo，則使用 docker 啟動一個臨時容器來執行刪除
-                sh 'docker run --rm -v ${WORKSPACE}:/src -w /src busybox rm -rf node_modules'
+                // 1. 暴力清理：叫 Docker 把所有 root 產生的資料夾全部刪光
+                // 包含 node_modules, 報告, 以及測試結果
+                sh 'docker run --rm -v ${WORKSPACE}:/src -w /src busybox sh -c "rm -rf node_modules playwright-report test-results"'
+ 
                 // sh 'sudo rm -rf ${WORKSPACE}/contact-manager-local'
-                deleteDir()
+                // deleteDir()
                 checkout scm
             }
         }
