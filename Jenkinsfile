@@ -21,8 +21,9 @@ pipeline {
     stages {
         stage('Clean & Checkout') {
            steps {
-                // // 使用 sh 而非 deleteDir() 有時更暴力有效，確保權限問題被掃除
-                // sh 'sudo chown -r jenkins:jenkins . || true' 
+                // 1. 強制把當前目錄所有權拿回來，然後刪除
+                // 如果沒有 sudo，則使用 docker 啟動一個臨時容器來執行刪除
+                sh 'docker run --rm -v ${WORKSPACE}:/src -w /src busybox rm -rf node_modules'
                 deleteDir()
                 checkout scm
             }
