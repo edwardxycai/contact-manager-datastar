@@ -8,9 +8,9 @@ pipeline {
     // }
     agent any
     
-    // options {
-    //     skipDefaultCheckout(true)
-    // }
+    options {
+        skipDefaultCheckout(true)
+    }
 
     environment {
         // PLAYWRIGHT_BROWSERS_PATH = "${WORKSPACE}/.cache/ms-playwright"
@@ -23,8 +23,8 @@ pipeline {
            steps {
                 // 1. 強制把當前目錄所有權拿回來，然後刪除
                 // 如果沒有 sudo，則使用 docker 啟動一個臨時容器來執行刪除
-                // sh 'docker run --rm -v ${WORKSPACE}:/src -w /src busybox rm -rf node_modules'
-                sh 'sudo rm -rf ${WORKSPACE}/contact-manager-local'
+                sh 'docker run --rm -v ${WORKSPACE}:/src -w /src busybox rm -rf node_modules'
+                // sh 'sudo rm -rf ${WORKSPACE}/contact-manager-local'
                 deleteDir()
                 checkout scm
             }
